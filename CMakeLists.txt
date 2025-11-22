@@ -14,22 +14,4 @@ INCLUDE(CMake/Base.cmake)
 INCLUDE(CMake/Modules/LibFindMacros.cmake)
 
 
-
-#ADD_SUBDIRECTORY(Common)
-
-
-SET(SOURCES
-	CurlRequest.cpp
-)
-
-SET(HEADERS
-	Curl.h
-	CurlRequest.h
-    Settings.h
-)
-
-SET(DEPENDENCIES
-	curl
-)
-
-build_static_lib( curlcpp "" )
+ADD_SUBDIRECTORY(CurlCpp)

@@ -71,6 +71,11 @@ function(_handle_modules_pre_linker modules)
         _handle_pre_mysql()
     endif()
 
+    list(FIND modules "yaml" found)
+    if ( ${found} GREATER -1 )
+        _handle_pre_yaml()
+    endif()
+
 endfunction()
 
 
@@ -94,6 +99,11 @@ function(_handle_modules_post_linker modules target)
     list(FIND modules "mysql" found)
     if ( ${found} GREATER -1 )
         _handle_post_mysql(${target})
+    endif()
+
+    list(FIND modules "yaml" found)
+    if ( ${found} GREATER -1 )
+        _handle_post_yaml(${target})
     endif()
 
 endfunction()
@@ -147,6 +157,7 @@ endfunction()
 function(_handle_post_curl TARGET)
 
     _curl_check_existence()
+    target_link_directories(${TARGET} PRIVATE ${BUILD_CURL_LIB})
     target_link_libraries(${TARGET} curl)
 
 endfunction()
@@ -193,6 +204,7 @@ function(_handle_post_json TARGET)
 
     # for a proper library this also setups any required include directories or other compilation options
     _json_check_existence()
+    target_link_directories(${TARGET} PRIVATE ${BUILD_JSON_LIB})
     target_link_libraries(${TARGET} jsoncpp)	# using jsoncpp
 
 endfunction()
@@ -228,6 +240,7 @@ endfunction()
 function(_handle_post_mysql TARGET)
 
     _mysql_check_existence()
+    target_link_directories(${TARGET} PRIVATE ${BUILD_MYSQL_LIB})
     target_link_libraries(${TARGET} mysqlclient)
 
 endfunction()
@@ -241,4 +254,50 @@ function(_handle_pre_mysql)
 endfunction()
 
 ### MYSQL
+###############################
+
+###############################
+### YAML
+
+function(_could_not_find_yaml)
+    MESSAGE(STATUS "Could not find (the correct version of) YAML.")
+
+    MESSAGE(FATAL_ERROR "MysqlObjectCPP currently requires ${YAML_PACKAGE_NAME}\n")
+endfunction()
+
+
+function(_yaml_check_existence)
+
+    set(YAML_PACKAGE_NAME "yaml-cpp")
+
+    find_package(${YAML_PACKAGE_NAME} REQUIRED)
+
+    # make sure the appropriate environment variable is set!
+    if(NOT YAML_FOUND)
+        MESSAGE( STATUS "YAML_FOUND: ${YAML_FOUND}" )
+        MESSAGE( STATUS "YAML_INCLUDE_DIR: ${YAML_INCLUDE_DIR}" )
+
+        _could_not_find_yaml()
+    endif()
+
+endfunction()
+
+function(_handle_post_yaml TARGET)
+
+    # for a proper library this also setups any required include directories or other compilation options
+    _yaml_check_existence()
+    target_link_directories(${TARGET} PRIVATE ${YAML_INCLUDE_DIR})
+    target_link_libraries(${TARGET} yaml-cpp)    # using yaml-cpp
+
+endfunction()
+
+
+function(_handle_pre_yaml)
+
+    _yaml_check_existence()
+    include_directories(${YAML_INCLUDE_DIR})
+
+endfunction()
+
+### YAML
 ###############################
