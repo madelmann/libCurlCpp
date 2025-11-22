@@ -29,7 +29,7 @@ SET(HEADERS
 )
 
 SET(DEPENDENCIES
-#	UtilsCommon
+	curl
 )
 
 build_static_lib( curlcpp "" )

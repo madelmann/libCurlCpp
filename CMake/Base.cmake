@@ -56,6 +56,3 @@ INCLUDE( ${PROJECT_SOURCE_DIR}/CMake/Builder.cmake )
 # include custom dependencies
 INCLUDE( ${PROJECT_SOURCE_DIR}/CMake/Dependencies.cmake )
 
-#include custom extensions
-INCLUDE( ${PROJECT_SOURCE_DIR}/CMake/Extensions.cmake )
-INCLUDE( ${PROJECT_SOURCE_DIR}/CMake/Extensions.cmake )
